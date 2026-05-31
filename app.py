@@ -167,6 +167,8 @@ if st.session_state.show_form:
 # =================================================================
 # 5. DISPLAY (Shows message if empty)
 # =================================================================
+st.write(filtered_photos)
+
 for photo in filtered_photos:
     col_left, col_main, col_right = st.columns([1, 2, 1])
     with col_main:
