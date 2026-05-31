@@ -167,19 +167,33 @@ if st.session_state.show_form:
 # =================================================================
 # 5. DISPLAY (Shows message if empty)
 # =================================================================
-st.write(filtered_photos)
+# --- 1. デバッグエリア ---
+st.write("--- デバッグ情報 ---")
+st.write(st.session_state.photo_list) 
 
+# --- 2. フィルタリング（ここで filtered_photos を定義します） ---
+# ここがないと、下の for 文でエラーになる可能性があります
+filtered_photos = st.session_state.photo_list 
+
+# --- 3. 表示エリア ---
 for photo in filtered_photos:
     col_left, col_main, col_right = st.columns([1, 2, 1])
     with col_main:
-        st.markdown(f"<div class='photo-title'>{photo['title']}</div>", unsafe_allow_html=True)
-        st.markdown(f"<div class='photo-meta'>{photo['year']}</div>", unsafe_allow_html=True)
+        # タイトル等の表示
+        st.markdown(f"<div class='photo-title'>{photo.get('title', '無題')}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='photo-meta'>{photo.get('year', '')}</div>", unsafe_allow_html=True)
         
-        st.image(photo["url"], use_container_width=True)
-        
+        # 画像の表示
+        url = photo.get("url")
+        if url:
+            st.image(url, use_container_width=True)
+        else:
+            st.warning("画像URLがありません")
+            
         if photo.get('comment'):
             st.markdown(f"<div class='photo-comment'>{photo['comment']}</div>", unsafe_allow_html=True)
         st.write("<div style='margin-bottom: 50px;'></div>", unsafe_allow_html=True)
+        
 # =================================================================
 # 6. FILTER LOGIC
 # =================================================================
