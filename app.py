@@ -121,7 +121,9 @@ st.markdown(f'''
 if st.session_state.show_form:
     col2 = st.columns([1, 2, 1])[1]
     with col2:
+        st.markdown('<div class="upload-form-wrapper">', unsafe_allow_html=True)
         if not st.session_state.is_authenticated:
+            st.subheader("Administrator Authentication")
             if st.text_input("Password", type="password") == "yukoyuko":
                 st.session_state.is_authenticated = True
                 st.rerun()
@@ -131,22 +133,36 @@ if st.session_state.show_form:
                 new_title = st.text_input("Country / City")
                 new_cat = st.selectbox("Region", ["Asia", "Africa", "North America", "South America", "Europe", "Australia"])
                 new_year = st.selectbox("Year", options=[str(y) for y in range(2015, 2100)])
-                new_url = st.text_input("Image URL (画像の直リンクを入力)")
+                
+                # --- ここを「URL入力」に変更 ---
+                image_url = st.text_input("写真のURL（Googleドライブの共有リンク等）")
+                
                 new_comment = st.text_area("Short Comment")
                 
                 if st.form_submit_button("Add to Gallery"):
-                    if new_title and uploaded_file:
-                        # 1. リストに追加
-                        new_photo = {"title": new_title, "url": "写真URL", "year": new_year, "category": new_cat, "comment": new_comment}
+                    if new_title and image_url: # uploaded_file ではなく image_url をチェック
+                        # データを登録
+                        new_photo = {
+                            "title": new_title, 
+                            "url": image_url, # URLを保存
+                            "year": new_year, 
+                            "category": new_cat, 
+                            "comment": new_comment
+                        }
                         st.session_state.photo_list.insert(0, new_photo)
                         
-                        # 2. 【ここを追加】GitHubへ保存
+                        # --- GitHubへの自動保存 ---
+                        import json
+                        from github import Github
                         g = Github(st.secrets["GITHUB_TOKEN"])
                         repo = g.get_repo("bms008w2-beep/best.photos.ever")
                         file_content = repo.get_contents("data.json")
                         repo.update_file("data.json", "Update", json.dumps(st.session_state.photo_list), file_content.sha)
                         
+                        st.session_state.show_form = False
+                        st.session_state.is_authenticated = False
                         st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
 # =================================================================
 # 5. DISPLAY (Shows message if empty)
