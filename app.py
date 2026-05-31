@@ -167,18 +167,17 @@ if st.session_state.show_form:
 # =================================================================
 # 5. DISPLAY (Shows message if empty)
 # =================================================================
-filtered = [p for p in st.session_state.photo_list if (st.session_state.selected_cat=="ALL" or p["category"]==st.session_state.selected_cat) and (st.session_state.selected_year=="ALL" or p["year"]==st.session_state.selected_year)]
-if not filtered:
-    st.markdown("<p style='text-align: center; color: #8C8A87; margin-top: 100px;'>No photos yet. Click ＋ to add one!</p>", unsafe_allow_html=True)
-else:
-    for p in filtered:
-        c2 = st.columns([1, 2, 1])[1]
-        with c2:
-            st.markdown(f"<div class='photo-title'>{p['title']}</div><div class='photo-meta'>{p['year']}</div>", unsafe_allow_html=True)
-            st.image(p["url"], use_container_width=True)
-            if p.get('comment'): st.markdown(f"<div class='photo-comment'>{p['comment']}</div>", unsafe_allow_html=True)
-            st.write("<div style='margin-bottom: 50px;'></div>", unsafe_allow_html=True)
-
+for photo in filtered_photos:
+    col_left, col_main, col_right = st.columns([1, 2, 1])
+    with col_main:
+        st.markdown(f"<div class='photo-title'>{photo['title']}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='photo-meta'>{photo['year']}</div>", unsafe_allow_html=True)
+        
+        st.image(photo["url"], use_container_width=True)
+        
+        if photo.get('comment'):
+            st.markdown(f"<div class='photo-comment'>{photo['comment']}</div>", unsafe_allow_html=True)
+        st.write("<div style='margin-bottom: 50px;'></div>", unsafe_allow_html=True)
 # =================================================================
 # 6. FILTER LOGIC
 # =================================================================
