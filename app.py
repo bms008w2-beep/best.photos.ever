@@ -1,5 +1,21 @@
 import streamlit as st
 from PIL import Image
+import json
+from github import Github
+
+# GitHubの準備（一番上に追記）
+def load_data():
+    try:
+        g = Github(st.secrets["GITHUB_TOKEN"])
+        repo = g.get_repo("bms008w2-beep/best.photos.ever")
+        file_content = repo.get_contents("data.json")
+        return json.loads(file_content.decoded_content.decode("utf-8"))
+    except:
+        return []
+
+# 最初の一回だけデータを読み込む
+if "photo_list" not in st.session_state:
+    st.session_state.photo_list = load_data()
 
 # =================================================================
 # 1. INITIAL SETTINGS & BULLETPROOF LAYOUT DESIGN (CSS)
@@ -119,15 +135,17 @@ if st.session_state.show_form:
                 new_comment = st.text_area("Short Comment")
                 
                 if st.form_submit_button("Add to Gallery"):
-                    if new_title and new_url:
-                        new_photo = {"title": new_title, "url": new_url, "year": new_year, "category": new_cat, "comment": new_comment}
+                    if new_title and uploaded_file:
+                        # 1. リストに追加
+                        new_photo = {"title": new_title, "url": "写真URL", "year": new_year, "category": new_cat, "comment": new_comment}
                         st.session_state.photo_list.insert(0, new_photo)
                         
-                        # GitHubへ書き込み
-                        save_data_to_github(st.session_state.photo_list)
+                        # 2. 【ここを追加】GitHubへ保存
+                        g = Github(st.secrets["GITHUB_TOKEN"])
+                        repo = g.get_repo("bms008w2-beep/best.photos.ever")
+                        file_content = repo.get_contents("data.json")
+                        repo.update_file("data.json", "Update", json.dumps(st.session_state.photo_list), file_content.sha)
                         
-                        st.session_state.show_form = False
-                        st.session_state.is_authenticated = False
                         st.rerun()
 
 # =================================================================
