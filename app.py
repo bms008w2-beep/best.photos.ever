@@ -168,8 +168,8 @@ if st.session_state.show_form:
 # 5. DISPLAY (Shows message if empty)
 # =================================================================
 # --- 1. デバッグエリア ---
-st.write("--- デバッグ情報 ---")
-st.write(st.session_state.photo_list) 
+# st.write("--- デバッグ情報 ---")
+# st.write(st.session_state.photo_list) 
 
 # --- 2. フィルタリング（ここで filtered_photos を定義します） ---
 # ここがないと、下の for 文でエラーになる可能性があります
