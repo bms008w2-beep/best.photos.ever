@@ -26,7 +26,7 @@ st.markdown("""
     <style>
     header, [data-testid="stHeader"] { display: none !important; }
     .stApp { background-color: #FCFBFA; }
-    .single-photo-container { max-width: 1330px; margin: 0 auto 60px auto; }
+    .single-photo-container { max-width: 1330px; margin: 0 auto 40px auto; }
     .header-grid {
         max-width: 1330px;
         margin: 15px auto 20px auto;
