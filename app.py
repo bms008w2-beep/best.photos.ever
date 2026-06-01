@@ -130,12 +130,11 @@ if st.session_state.show_form:
         else:
             st.subheader("Add New Photo")
             with st.form("add_photo_form", clear_on_submit=True):
-                new_title = st.text_input("Country / City")
+                new_title = st.text_input("Title")
                 new_cat = st.selectbox("Region", ["Asia", "Africa", "North America", "South America", "Europe", "Australia"])
-                new_year = st.selectbox("Year", options=[str(y) for y in range(2015, 2100)])
+                new_year = st.selectbox("Year", options=[str(y) for y in range(2006, 2100)])
                 
-                # --- ここを「URL入力」に変更 ---
-                image_url = st.text_input("写真のURL（Googleドライブの共有リンク等）")
+                image_url = st.text_input("URL of picture")
                 
                 new_comment = st.text_area("Short Comment")
                 
