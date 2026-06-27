@@ -166,6 +166,10 @@ if st.session_state.show_form:
 # =================================================================
 # 6. FILTER LOGIC
 # =================================================================
+import random
+
+random.shuffle(st.session_state.photo_list) 
+
 filtered_photos = []
 for photo in st.session_state.photo_list:
     year_match = (st.session_state.selected_year == "ALL") or (photo["year"] == st.session_state.selected_year)
